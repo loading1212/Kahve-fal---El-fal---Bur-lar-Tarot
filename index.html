@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamWeaver AI - Rüya Tabiri & Fal</title>
+    <meta name="description" content="Rüya tabiri, astroloji, kahve falı, el falı ve motivasyon ile ilham alın.">
+    <link rel="manifest" href="manifest.json">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="icon-192x192.png">
+    
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: #0f3460;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        nav a {
+            color: #e94560;
+            margin: 0 0.5rem;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #ff6b6b;
+        }
+
+        main {
+            flex: 1;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        section {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        textarea, input[type="file"] {
+            width: 90%;
+            max-width: 600px;
+            margin: 1rem auto;
+            padding: 1rem;
+            border-radius: 10px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: #e94560;
+            color: #fff;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        button:hover {
+            background: #ff6b6b;
+            transform: scale(1.05);
+        }
+
+        .daily-buttons button {
+            background: #FFD700;
+            color: #000;
+            border-radius: 20px;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 8px rgba(255, 215, 0, 0.3);
+        }
+
+        .daily-buttons button:hover {
+            background: #FFA500;
+            transform: scale(1.1);
+        }
+
+        .result {
+            margin-top: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 10px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .daily-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 15px;
+            margin: 1rem 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .gallery-grid div {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            transition: transform 0.3s;
+        }
+
+        .gallery-grid div:hover {
+            transform: scale(1.03);
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            max-width: 600px;
+            margin: 1rem auto;
+        }
+
+        ul li {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            border-radius: 5px;
+        }
+
+        footer {
+            background: #0f3460;
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+
+        footer a {
+            color: #e94560;
+            text-decoration: none;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.5rem; }
+            nav a { margin: 0 0.3rem; font-size: 0.9rem; }
+            .buttons { flex-direction: column; }
+            button { width: 100%; max-width: 300px; }
+            .daily-buttons { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">DreamWeaver AI</div>
+        <nav>
+            <a href="#home" onclick="showSection('home')">Ana Sayfa</a>
+            <a href="#daily" onclick="showSection('daily')">Günlük İlham</a>
+            <a href="#record" onclick="showSection('record')">Rüya Tabiri</a>
+            <a href="#fortune" onclick="showSection('fortune')">Fal (Kahve & El)</a>
+            <a href="#gallery" onclick="showSection('gallery')">Galeri</a>
+            <a href="#premium" onclick="showSection('premium')">Premium</a>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="active">
+            <h1>Rüyalarınızı ve Gününüzü Keşfedin</h1>
+            <p>Rüya tabiri, motivasyon, astroloji, kahve falı ve el falı ile ilham alın.</p>
+            <div class="daily-buttons buttons">
+                <button onclick="showSection('daily')">Günlük İlham</button>
+                <button onclick="showSection('record')">Rüya Tabiri</button>
+                <button onclick="showSection('fortune')">Kahve & El Falı</button>
+            </div>
+        </section>
+
+        <section id="daily">
+            <h2>Günlük İlham</h2>
+            <div class="daily-card result">
+                <h3>Olumlu Motivasyon</h3>
+                <p id="motivationText">Bugün kendinize inanın – her adım bir zaferdir!</p>
+                <button onclick="getNewMotivation()">Yeni Mesaj</button>
+            </div>
+        </section>
+
+        <section id="record">
+            <h2>Rüya Tabiri</h2>
+            <p>Burcunuzu seçin ve rüyanızı anlatın.</p>
+            <select id="zodiacSelect">
+                <option value="koç">Koç</option>
+                <option value="boğa">Boğa</option>
+                <option value="ikizler">İkizler</option>
+                <option value="yengeç">Yengeç</option>
+                <option value="aslan">Aslan</option>
+                <option value="başak">Başak</option>
+                <option value="terazi">Terazi</option>
+                <option value="akrep">Akrep</option>
+                <option value="yay">Yay</option>
+                <option value="oğlak">Oğlak</option>
+                <option value="kova">Kova</option>
+                <option value="balık">Balık</option>
+            </select>
+            <textarea id="dreamInput" placeholder="Rüyanızı detaylıca anlatın..."></textarea>
+            <div class="buttons">
+                <button onclick="recordVoice()">Sesle Kaydet</button>
+                <button onclick="analyzeDream()">AI ile Tabir Et</button>
+                <button onclick="visualizeDream()">Görselleştir</button>
+            </div>
+            <div id="dreamResult" class="result"></div>
+        </section>
+
+        <section id="fortune">
+            <h2>Kahve Falı & El Falı</h2>
+            <select id="fortuneSelect">
+                <option value="kahve">Kahve Falı</option>
+                <option value="el">El Falı</option>
+            </select>
+            <input type="file" id="fortuneImage" accept="image/*" onchange="handleImageUpload(event)">
+            <div class="buttons">
+                <button onclick="analyzeFortune()">Falı Yorumla</button>
+                <button onclick="analyzeFortune()">Rastgele Fal Bak</button>
+            </div>
+            <div id="fortuneResult" class="result"></div>
+        </section>
+
+        <section id="gallery">
+            <h2>Rüya Galerisi</h2>
+            <div id="dreamGallery" class="gallery-grid"></div>
+        </section>
+
+        <section id="premium">
+            <h2>Premium Özellikler</h2>
+            <ul>
+                <li>Detaylı rüya tabiri + burç entegrasyonu</li>
+                <li>Kişiselleştirilmiş tarot falı</li>
+                <li>Derin kahve ve el falı analizi</li>
+                <li>Günlük aşk, kariyer ve sağlık burçları</li>
+                <li>Reklamsız deneyim</li>
+            </ul>
+            <button onclick="subscribePremium()">Abone Ol ($4.99/ay)</button>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 DreamWeaver AI. Tüm hakları saklıdır. | <a href="#privacy">Gizlilik Politikası</a></p>
+    </footer>
+
+    <script>
+        let isPremium = localStorage.getItem('isPremium') === 'true' || false;
+        let dreams = JSON.parse(localStorage.getItem('dreams')) || [];
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+                .then(reg => console.log('Service Worker registered:', reg))
+                .catch(err => console.error('Service Worker error:', err));
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+            if (sectionId === 'gallery') loadGallery();
+            if (sectionId === 'daily') getNewMotivation();
+        }
+
+        const motivations = [
+            "Bugün kendinize inanın – her adım bir zaferdir!",
+            "Olumlu düşünün, evren size cevap verir.",
+            "İç huzurunuzu bulun, dış dünya değişir."
+        ];
+        function getNewMotivation() {
+            const random = Math.floor(Math.random() * motivations.length);
+            document.getElementById('motivationText').textContent = motivations[random];
+        }
+
+        function recordVoice() {
+            if (!('SpeechRecognition' in window) && !('webkitSpeechRecognition' in window)) {
+                alert('Ses tanıma desteklenmiyor.');
+                return;
+            }
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'tr-TR';
+            recognition.onresult = event => {
+                document.getElementById('dreamInput').value = event.results[0][0].transcript;
+                alert('Ses kaydı tamamlandı!');
+            };
+            recognition.onerror = () => alert('Hata oluştu.');
+            recognition.start();
+        }
+
+        async function analyzeDream() {
+            const dreamText = document.getElementById('dreamInput').value;
+            const zodiac = document.getElementById('zodiacSelect').value;
+            if (!dreamText) return alert('Rüyanızı girin.');
+            let analysis = `Rüyanız "${dreamText}" ${zodiac} burcu için: `;
+            if (isPremium) {
+                analysis += zodiac === 'koç' ? "Cesur adımlar atın, enerji yüksek." : "Detaylı analiz.";
+            } else {
+                analysis += "Genel yorum (detay için premium abone olun).";
+            }
+            document.getElementById('dreamResult').innerHTML = `<h3>Tabir (${zodiac}):</h3><p>${analysis}</p>`;
+            saveDream(dreamText, analysis);
+        }
+
+        async function visualizeDream() {
+            const dreamText = document.getElementById('dreamInput').value;
+            if (!dreamText) return alert('Rüyanızı girin.');
+            const imageUrl = isPremium ? 'https://via.placeholder.com/400x300?text=Premium+Gorsel' : 'https://via.placeholder.com/200x150?text=Ucretsiz+Gorsel';
+            document.getElementById('dreamResult').innerHTML += `<img src="${imageUrl}" alt="Rüya Görseli" style="max-width:100%; border-radius:10px; margin-top:1rem;">`;
+            saveDream(dreamText, null, imageUrl);
+        }
+
+        function saveDream(text, analysis = null, imageUrl = null) {
+            dreams.push({ text, analysis, imageUrl, date: new Date().toLocaleString('tr-TR') });
+            localStorage.setItem('dreams', JSON.stringify(dreams));
+        }
+
+        function loadGallery() {
+            const gallery = document.getElementById('dreamGallery');
+            gallery.innerHTML = '';
+            dreams.forEach(dream => {
+                const item = document.createElement('div');
+                item.innerHTML = `<p>${dream.date}</p><p>${dream.text.substring(0, 50)}...</p>`;
+                gallery.appendChild(item);
+            });
+        }
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById('fortuneResult').innerHTML = `<p>Resim yüklendi, analiz bekleniyor...</p><img src="${e.target.result}" style="max-width:100%; border-radius:10px;">`;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                alert('Resim seçilmedi.');
+            }
+        }
+
+        const fortuneData = {
+            kahve: {
+                free: [
+                    "Kahve falında genel bir iyimserlik var.",
+                    "Falda belirsizlik görünüyor, dikkatli olun.",
+                    "Küçük bir sürpriz kapıda.",
+                    "Huzurlu bir gün sizi bekliyor.",
+                    "Yeni bir fırsat görünüyor."
+                ],
+                premium: [
+                    "Kahve falında yol, aşk ve para sembolleri görünüyor. Aşkta yeni bir gelişme bekleyin.",
+                    "Falda bir yolculuk ve yeni bir başlangıç var. Kariyerde ilerleme olabilir.",
+                    "Aşkta güzel gelişmeler, sabırlı olun. Para akışı artabilir.",
+                    "Falda aile mutluluğu ve sağlık sembolleri. Dikkatli beslenin.",
+                    "Yeni bir dostluk veya ortaklık görünüyor. Fırsatları değerlendirin.",
+                    "Falınız olumlu, ama küçük bir engel var – aşacaksınız."
+                ]
+            },
+            el: {
+                free: [
+                    "El falında genel bir enerji var.",
+                    "Çizgiler karışık görünüyor, netleştirin.",
+                    "Küçük bir başarı işareti.",
+                    "Sağlık konusunda dikkatli olun.",
+                    "Aşk çizgisi güçlü görünüyor."
+                ],
+                premium: [
+                    "El falında uzun yaşam ve başarı çizgileri var. Kariyerde yükseliş bekleyin.",
+                    "Sağlık çizgisi güçlü, ama stres kontrolü önemli.",
+                    "Kader çizgisinde olumlu bir dönemeç. Yeni bir ilişki gelebilir.",
+                    "Aşk çizgisi derin, duygusal bir bağ oluşacak.",
+                    "Para çizgisi iyi, yatırım fırsatları var.",
+                    "Elinizde liderlik potansiyeli görünüyor – kullanın."
+                ]
+            }
+        };
+
+        function getRandomComment(type, isPremium) {
+            const comments = fortuneData[type][isPremium ? 'premium' : 'free'];
+            const randomIndex = Math.floor(Math.random() * comments.length);
+            return comments[randomIndex];
+        }
+
+        async function analyzeFortune() {
+            const type = document.getElementById('fortuneSelect').value;
+            if (!document.getElementById('fortuneImage').files[0]) {
+                alert('Lütfen bir resim yükleyin.');
+                return;
+            }
+            const comment = getRandomComment(type, isPremium);
+            document.getElementById('fortuneResult').innerHTML = `<h3>${type === 'kahve' ? 'Kahve Falı' : 'El Falı'}:</h3><p>${comment}</p>`;
+        }
+
+        function subscribePremium() {
+            if (confirm('Premium abonelik için $4.99/ay ödeyin. Onaylıyor musunuz?')) {
+                isPremium = true;
+                localStorage.setItem('isPremium', 'true');
+                alert('Tebrikler, premium abonesiniz! Sayfayı yenileyin.');
+                location.reload();
+            }
+        }
+
+        showSection('home');
+    </script>
+</body>
+</html>
